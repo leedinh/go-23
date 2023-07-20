@@ -6,6 +6,33 @@ import (
 	"strings"
 )
 
+func do_reorder(firstname string, lastname string, lang string) (first string, last string) {
+	switch lang {
+	case "vn", "cn", "jp", "kr", "tw":
+		{
+			first = lastname
+			last = firstname
+		}
+	case "us":
+		{
+			first = firstname
+			last = lastname
+		}
+	default:
+		{
+			panic("Language not supported")
+		}
+	}
+	return
+}
+
+func parse_input(args []string) (firstname string, lastname string, middle string) {
+	firstname = args[1]
+	lastname = args[2]
+	middle = strings.Join(args[3:len(args)-1], " ")
+	return
+}
+
 func main() {
 	args_len := len(os.Args)
 	// Check if the number of arguments is valid
@@ -19,27 +46,14 @@ func main() {
 		panic("Invalid language")
 	}
 
-	firstname := os.Args[1]
-	lastname := os.Args[2]
-	var first string
-	var second string
-	switch lang {
-	case "vn", "cn", "jp", "kr", "tw":
-		{
-			first = lastname
-			second = firstname
-		}
-	default:
-		{
-			first = firstname
-			second = lastname
-		}
-	}
+	// parse the input
+	firstname, lastname, middle := parse_input(os.Args)
+	first, last := do_reorder(firstname, lastname, lang)
 
 	// Print the output
-	if args_len == 4 {
-		fmt.Printf("Output: %s %s", first, second)
+	if middle == "" {
+		fmt.Printf("Output: %s %s", first, last)
 	} else {
-		fmt.Printf("Output: %s %s %s", first, second, strings.Join(os.Args[3:args_len-1], " "))
+		fmt.Printf("Output: %s %s %s", first, middle, last)
 	}
 }
